@@ -15,7 +15,16 @@ export default function AgregarProducto({ productos, setProductos }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setProductos([...productos, { ...form, cantidad: parseInt(form.cantidad), precio: parseFloat(form.precio) }]);
+    const nuevoProducto = {
+      nombre: form.nombre || "",
+      medida: form.medida || "",
+      color: form.color || "",
+      cantidad: parseInt(form.cantidad) || 0,
+      precio: parseFloat(form.precio) || 0
+    };
+    const nuevos = [...productos, nuevoProducto];
+    setProductos(nuevos);
+    localStorage.setItem("productos", JSON.stringify(nuevos));
     setForm({ nombre: "", medida: "", color: "", cantidad: "", precio: "" });
   };
 

@@ -1,9 +1,24 @@
-export default function HistorialVentas({ ventas }) {
+export default function HistorialVentas({ ventas, setVentas }) {
   const gananciaTotal = ventas.reduce((acc, v) => acc + v.total, 0);
+
+  const borrarHistorial = () => {
+    if (confirm("¿Seguro que quieres eliminar todo el historial de ventas?")) {
+      setVentas([]);
+      localStorage.removeItem("ventas");
+    }
+  };
 
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Historial de Ventas</h2>
+
+      <button
+        onClick={borrarHistorial}
+        className="bg-red-700 text-white p-2 rounded my-4"
+      >
+        Vaciar Historial
+      </button>
+
       {ventas.length === 0 ? (
         <p className="text-gray-500">No hay ventas registradas aún.</p>
       ) : (

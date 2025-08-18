@@ -1,5 +1,7 @@
 export default function Stock({ productos, setProductos }) {
+
   const borrarProducto = (index) => {
+    if (!productos[index]) return; // si no existe, salir
     if (confirm("¿Seguro que quieres borrar este producto?")) {
       const nuevos = productos.filter((_, i) => i !== index);
       setProductos(nuevos);
@@ -8,20 +10,32 @@ export default function Stock({ productos, setProductos }) {
 
   const editarProducto = (index) => {
     const prod = productos[index];
+    if (!prod) return; // si no existe, salir
+
     const nuevoNombre = prompt("Nuevo nombre:", prod.nombre) || prod.nombre;
+    const nuevaMedida = prompt("Nueva medida:", prod.medida) || prod.medida;
+    const nuevoColor = prompt("Nuevo color:", prod.color) || prod.color;
     const nuevaCantidad = parseInt(prompt("Nueva cantidad:", prod.cantidad)) || prod.cantidad;
     const nuevoPrecio = parseFloat(prompt("Nuevo precio:", prod.precio)) || prod.precio;
 
     const nuevos = [...productos];
-    nuevos[index] = { ...prod, nombre: nuevoNombre, cantidad: nuevaCantidad, precio: nuevoPrecio };
+    nuevos[index] = {
+      ...prod,
+      nombre: nuevoNombre,
+      medida: nuevaMedida,
+      color: nuevoColor,
+      cantidad: nuevaCantidad,
+      precio: nuevoPrecio,
+    };
     setProductos(nuevos);
   };
+
+  if (!productos || productos.length === 0) return <p>No hay productos cargados.</p>;
 
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Stock Actual</h2>
 
-      {/* Vista en pantallas grandes */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
@@ -37,10 +51,7 @@ export default function Stock({ productos, setProductos }) {
           </thead>
           <tbody>
             {productos.map((p, i) => (
-              <tr
-                key={i}
-                className={p.cantidad === 0 ? "bg-red-200" : p.cantidad < 5 ? "bg-yellow-200" : ""}
-              >
+              <tr key={i} className={p.cantidad === 0 ? "bg-red-200" : p.cantidad < 5 ? "bg-yellow-200" : ""}>
                 <td className="border p-2">{p.nombre}</td>
                 <td className="border p-2">{p.medida}</td>
                 <td className="border p-2">{p.color}</td>
@@ -57,13 +68,9 @@ export default function Stock({ productos, setProductos }) {
         </table>
       </div>
 
-      {/* Vista en pantallas pequeñas */}
       <div className="sm:hidden flex flex-col gap-4">
         {productos.map((p, i) => (
-          <div
-            key={i}
-            className={`p-4 rounded shadow ${p.cantidad === 0 ? "bg-red-200" : p.cantidad < 5 ? "bg-yellow-200" : "bg-white"}`}
-          >
+          <div key={i} className={`p-4 rounded shadow ${p.cantidad === 0 ? "bg-red-200" : p.cantidad < 5 ? "bg-yellow-200" : "bg-white"}`}>
             <p><strong>Nombre:</strong> {p.nombre}</p>
             <p><strong>Medida:</strong> {p.medida}</p>
             <p><strong>Color:</strong> {p.color}</p>
